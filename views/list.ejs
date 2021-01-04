@@ -1,13 +1,6 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <link rel="stylesheet" href="CSS/styles.css">
-        <title>To-do List</title>
-    </head>
-    <body>
+<%- include('header'); -%>
         <div class="box">
-            <h1 id="heading" style="text-align: center;"><%= kindofDay %></h1>
+            <h1 id="heading" style="text-align: center;"><%= ListTitle %></h1>
         </div>
         <div class="box">
             <% for(var i=0; i < newItems.length; i++) { %>
@@ -18,9 +11,10 @@
             <% } %>
             <form action="/" method="POST" class="item">
                 <input type="text" name="item" placeholder="New Item" autocomplete="off">
-                <button>+</button>
+                <button type="submit" name="list" value=<%= ListTitle %>>+</button>
             </form>
         </div>
-        
-    </body>
-</html>
+
+<%- include('footer'); -%>
+     
+   
