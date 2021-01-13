@@ -3,10 +3,11 @@
             <h1 id="heading" style="text-align: center;"><%= ListTitle %></h1>
         </div>
         <div class="box">
+
             <% for(var i=0; i < newItems.length; i++) { %>
                 <div class="item">
                     <input type="checkbox">
-                    <p><%= newItems[i] %></p>
+                    <p><%= newItems[i].name %></p>
                 </div>
             <% } %>
             <form action="/" method="POST" class="item">
