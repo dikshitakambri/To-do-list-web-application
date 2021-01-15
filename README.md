@@ -15,6 +15,16 @@
     <li>Express.js(Backend)</li>
 </ul>
 
+<h4>Database</h4>
+<ul>
+    <li>MongoDB</li>
+</ul>
+
+<h4>Libraries used</h4>
+<ul>
+    <li>Mongoose</li>
+</ul>
+
 <br>
 
 <span>
