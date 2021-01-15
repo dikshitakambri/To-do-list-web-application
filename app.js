@@ -58,14 +58,15 @@ app.get("/", function(req, res){
 
 app.post("/", function(req, res){
 
-    var item = req.body.item;
-    if(req.body.list === "Worklist"){
-        workitems.push(item);
-        res.redirect("/work");
-    }else{
-        items.push(item);
-        res.redirect("/");
-    }
+    var itemName = req.body.item;
+
+    const item = new Item ({
+        name : itemName
+    });
+    
+    item.save();
+
+    res.redirect("/");
     
 });
 
@@ -85,3 +86,7 @@ app.post("/work", function(req, res){
 app.listen(3000, function(){
     console.log("Server running on 3000 port");
 });
+
+// "C:\Program Files\MongoDB\Server\4.4\bin\mongod.exe" --dbpath="c:\data\db"
+
+// "C:\Program Files\MongoDB\Server\4.4\bin\mongo.exe"
