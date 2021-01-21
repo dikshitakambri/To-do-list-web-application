@@ -41,7 +41,7 @@ app.get("/", function(req, res){
         if(foundItems.length === 0){
             Item.insertMany(defaultList, function(err){
                 if(err){
-                    Console.log(err);
+                    console.log(err);
                 }else{
                     console.log("Successfully aaded");
                 }
