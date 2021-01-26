@@ -25,6 +25,13 @@ const item2 = new Item ({
 
 const defaultList = [item1 , item2];
 
+const listSchema = {
+    name : String,
+    items = [itemSchema]
+};
+
+const List = mongoose.model("List", listSchema);
+
 app.get("/", function(req, res){
     var today = new Date();
     var currentday = today.getDay();
@@ -82,18 +89,31 @@ app.post("/delete", function(req, res){
    
 });
 
-app.get("/work", function(req, res){
-    res.render("list",{
-        ListTitle : "Worklist",
-        newItems : workitems
+app.get("/:CustomListName", function(req, res){
+
+    const CustomListName = req.params.CustomListName;
+
+    List.findOne({name: CustomListName}, function(err, foundlist){
+        if(!err){
+            if(!foundlist){
+                const list = new List({
+                    name : CustomListName,
+                    items : defaultList
+                });
+                res.redirect("/" + CustomListName);
+                items.save();
+
+            }else {
+                res.render("list",{
+                    ListTitle : day,
+                    newItems : foundlist
+                });
+            }
+        }
     });
+
 });
 
-app.post("/work", function(req, res){
-    var item = req.body.item;
-    workitems.push(item);
-    res.redirect("/work");
-});
 
 app.listen(3000, function(){
     console.log("Server running on 3000 port");
