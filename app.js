@@ -91,15 +91,22 @@ app.get("/:CustomListName", function(req, res){
 app.post("/", function(req, res){
 
     var itemName = req.body.item;
+    var listName = req.body.list;
 
     const item = new Item ({
         name : itemName
     });
     
-    item.save();
-
-    res.redirect("/");
-    
+    if(listName === itemName){
+        item.save();
+        res.redirect("/");
+    }else{
+        List.findOne({name : listName}, function(err, foundList){
+            foundList.item.push(item);
+            foundList.save();
+            res.redirect("/" + listName);
+        });
+    }
 });
 
 app.post("/delete", function(req, res){
