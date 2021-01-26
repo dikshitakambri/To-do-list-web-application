@@ -27,7 +27,7 @@ const defaultList = [item1 , item2];
 
 const listSchema = {
     name : String,
-    items = [itemSchema]
+    item : [itemSchema]
 };
 
 const List = mongoose.model("List", listSchema);
@@ -63,6 +63,31 @@ app.get("/", function(req, res){
     });
 });
 
+app.get("/:CustomListName", function(req, res){
+
+    const CustomListName = req.params.CustomListName;
+
+    List.findOne({name: CustomListName}, function(err, foundList){
+        if(!err){
+            if(!foundList){
+                const list = new List({
+                    name : CustomListName,
+                    item : defaultList
+                });
+                res.redirect("/" + CustomListName);
+                list.save();
+
+            }else {
+                res.render("list",{
+                    ListTitle : foundList.name,
+                    newItems : foundList.item
+                });
+            }
+        }
+    });
+
+});
+
 app.post("/", function(req, res){
 
     var itemName = req.body.item;
@@ -87,31 +112,6 @@ app.post("/delete", function(req, res){
         }
     });
    
-});
-
-app.get("/:CustomListName", function(req, res){
-
-    const CustomListName = req.params.CustomListName;
-
-    List.findOne({name: CustomListName}, function(err, foundlist){
-        if(!err){
-            if(!foundlist){
-                const list = new List({
-                    name : CustomListName,
-                    items : defaultList
-                });
-                res.redirect("/" + CustomListName);
-                items.save();
-
-            }else {
-                res.render("list",{
-                    ListTitle : day,
-                    newItems : foundlist
-                });
-            }
-        }
-    });
-
 });
 
 
