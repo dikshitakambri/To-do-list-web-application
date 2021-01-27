@@ -10,6 +10,7 @@
                         <input type="checkbox" name="checkbox" value="<%= item._id %>" onchange="this.form.submit()">
                         <p><%= item.name %></p>
                     </div>
+                    <!-- <input type="hidden" name="listname" value=<%= ListTitle %>></input> -->
                 </form>
             <% }) %>
             <form action="/" method="POST" class="item">
@@ -20,4 +21,14 @@
 
 <%- include('footer'); -%>
      
+
+<!-- if(listName === "Today"){
+        
+}else{
+    List.findOneAndUpdate({name : listName},{$pull: {items: {_id: checkedItems}}}, function(err, foundList){
+        if(!err){
+            res.redirect("/" + listName);
+        }
+    });    
+}   -->
    
