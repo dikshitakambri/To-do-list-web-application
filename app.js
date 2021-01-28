@@ -93,16 +93,25 @@ app.post("/", function(req, res){
     var itemName = req.body.item;
     var listName = req.body.list;
 
-    const item = new Item ({
+    var today = new Date();
+    var currentday = today.getDay();
+    var options = {
+        month:"long",
+        year : "numeric",
+        weekday :"long"
+    };
+
+    var day = today.toLocaleDateString("en-US", options);
+
+    const Newitem = new Item ({
         name : itemName
     });
-    
-    if(listName === itemName){
-        item.save();
+    if(listName === day){
+        Newitem.save();
         res.redirect("/");
     }else{
         List.findOne({name : listName}, function(err, foundList){
-            foundList.item.push(item);
+            foundList.item.push(Newitem);
             foundList.save();
             res.redirect("/" + listName);
         });
@@ -111,14 +120,28 @@ app.post("/", function(req, res){
 
 app.post("/delete", function(req, res){
     const checkedItems = req.body.checkbox;
+    const listName = req.body.ListName;
 
-    Item.findByIdAndRemove(checkedItems, function(err){
-        if(!err){
-            console.log("successfully deleted");
-            res.redirect("/");
-        }
-    });
-   
+    var today = new Date();
+    var currentday = today.getDay();
+    var options = {
+        month:"long",
+        year : "numeric",
+        weekday :"long"
+    };
+
+    var day = today.toLocaleDateString("en-US", options);
+
+    if(listName === day){
+        Item.findByIdAndRemove(checkedItems, function(err){
+            if(!err){
+                console.log("successfully deleted");
+                res.redirect("/");
+            }
+        });
+    }else{
+
+    }   
 });
 
 

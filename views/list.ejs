@@ -10,25 +10,15 @@
                         <input type="checkbox" name="checkbox" value="<%= item._id %>" onchange="this.form.submit()">
                         <p><%= item.name %></p>
                     </div>
-                    <!-- <input type="hidden" name="listname" value=<%= ListTitle %>></input> -->
+                    <input type="hidden" name="ListName" value="<%= ListTitle %>">
                 </form>
             <% }) %>
             <form action="/" method="POST" class="item">
                 <input type="text" name="item" placeholder="New Item" autocomplete="off">
-                <button type="submit" name="list" value=<%= ListTitle %>>+</button>
+                <button type="submit" name="list" value="<%= ListTitle %>">+</button>
             </form>
         </div>
 
 <%- include('footer'); -%>
      
-
-<!-- if(listName === "Today"){
-        
-}else{
-    List.findOneAndUpdate({name : listName},{$pull: {items: {_id: checkedItems}}}, function(err, foundList){
-        if(!err){
-            res.redirect("/" + listName);
-        }
-    });    
-}   -->
    
