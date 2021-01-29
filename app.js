@@ -1,36 +1,36 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
+// const mongoose = require("mongoose");
 
 const app = express();
-app.use(bodyParser.urlencoded({extended:true}));
+// app.use(bodyParser.urlencoded({extended:true}));
 app.set('view engine', 'ejs');
-app.use(express.static("public"));
+// app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost:27017/todolistDB" ,{ useNewUrlParser: true , useUnifiedTopology: true});
+// mongoose.connect("mongodb://localhost:27017/todolistDB" ,{ useNewUrlParser: true , useUnifiedTopology: true});
 
-const itemSchema = {
-    name : String
-};
+// const itemSchema = {
+//     name : String
+// };
 
-const Item = mongoose.model("Item", itemSchema);
+// const Item = mongoose.model("Item", itemSchema);
 
-const item1 = new Item ({
-    name : "Work 1"
-});
+// const item1 = new Item ({
+//     name : "Work 1"
+// });
 
-const item2 = new Item ({
-    name : "Work 2"
-});
+// const item2 = new Item ({
+//     name : "Work 2"
+// });
 
-const defaultList = [item1 , item2];
+// const defaultList = [item1 , item2];
 
-const listSchema = {
-    name : String,
-    item : [itemSchema]
-};
+// const listSchema = {
+//     name : String,
+//     item : [itemSchema]
+// };
 
-const List = mongoose.model("List", listSchema);
+// const List = mongoose.model("List", listSchema);
 
 app.get("/", function(req, res){
     var today = new Date();
@@ -43,106 +43,109 @@ app.get("/", function(req, res){
 
     var day = today.toLocaleDateString("en-US", options);
 
-    Item.find({}, function(err, foundItems){
-
-        if(foundItems.length === 0){
-            Item.insertMany(defaultList, function(err){
-                if(err){
-                    console.log(err);
-                }else{
-                    console.log("Successfully aaded");
-                }
-            });
-            res.redirect("/");
-        }else{
-            res.render("list",{
-                ListTitle : day,
-                newItems : foundItems
-            });
-        }
-    });
+    res.render("list", {Day : day});
 });
 
-app.get("/:CustomListName", function(req, res){
+//     Item.find({}, function(err, foundItems){
 
-    const CustomListName = req.params.CustomListName;
+//         if(foundItems.length === 0){
+//             Item.insertMany(defaultList, function(err){
+//                 if(err){
+//                     console.log(err);
+//                 }else{
+//                     console.log("Successfully aaded");
+//                 }
+//             });
+//             res.redirect("/");
+//         }else{
+//             res.render("list",{
+//                 ListTitle : day,
+//                 newItems : foundItems
+//             });
+//         }
+//     });
+// });
 
-    List.findOne({name: CustomListName}, function(err, foundList){
-        if(!err){
-            if(!foundList){
-                const list = new List({
-                    name : CustomListName,
-                    item : defaultList
-                });
-                res.redirect("/" + CustomListName);
-                list.save();
+// app.get("/:CustomListName", function(req, res){
 
-            }else {
-                res.render("list",{
-                    ListTitle : foundList.name,
-                    newItems : foundList.item
-                });
-            }
-        }
-    });
+//     const CustomListName = req.params.CustomListName;
 
-});
+//     List.findOne({name: CustomListName}, function(err, foundList){
+//         if(!err){
+//             if(!foundList){
+//                 const list = new List({
+//                     name : CustomListName,
+//                     item : defaultList
+//                 });
+//                 res.redirect("/" + CustomListName);
+//                 list.save();
 
-app.post("/", function(req, res){
+//             }else {
+//                 res.render("list",{
+//                     ListTitle : foundList.name,
+//                     newItems : foundList.item
+//                 });
+//             }
+//         }
+//     });
 
-    var itemName = req.body.item;
-    var listName = req.body.list;
+// });
 
-    var today = new Date();
-    var currentday = today.getDay();
-    var options = {
-        month:"long",
-        year : "numeric",
-        weekday :"long"
-    };
+// app.post("/", function(req, res){
 
-    var day = today.toLocaleDateString("en-US", options);
+//     var itemName = req.body.item;
+//     var listName = req.body.list;
 
-    const Newitem = new Item ({
-        name : itemName
-    });
-    if(listName === day){
-        Newitem.save();
-        res.redirect("/");
-    }else{
-        List.findOne({name : listName}, function(err, foundList){
-            foundList.item.push(Newitem);
-            foundList.save();
-            res.redirect("/" + listName);
-        });
-    }
-});
+//     var today = new Date();
+//     var currentday = today.getDay();
+//     var options = {
+//         month:"long",
+//         year : "numeric",
+//         weekday :"long"
+//     };
 
-app.post("/delete", function(req, res){
-    const checkedItems = req.body.checkbox;
-    const listName = req.body.ListName;
+//     var day = today.toLocaleDateString("en-US", options);
 
-    var today = new Date();
-    var currentday = today.getDay();
-    var options = {
-        month:"long",
-        year : "numeric",
-        weekday :"long"
-    };
+//     const Newitem = new Item ({
+//         name : itemName
+//     });
+//     if(listName === day){
+//         Newitem.save();
+//         res.redirect("/");
+//     }else{
+//         List.findOne({name : listName}, function(err, foundList){
+//             foundList.item.push(Newitem);
+//             foundList.save();
+//             res.redirect("/" + listName);
+//         });
+//     }
+// });
 
-    var day = today.toLocaleDateString("en-US", options);
+// app.post("/delete", function(req, res){
+//     const checkedItems = req.body.checkbox;
+//     const listName = req.body.ListName;
 
-    if(listName === day){
-        Item.findByIdAndRemove(checkedItems, function(err){
-            if(!err){
-                console.log("successfully deleted");
-                res.redirect("/");
-            }
-        });
-    }else{
+//     var today = new Date();
+//     var currentday = today.getDay();
+//     var options = {
+//         month:"long",
+//         year : "numeric",
+//         weekday :"long"
+//     };
 
-    }   
-});
+//     var day = today.toLocaleDateString("en-US", options);
+
+//     if(listName === day){
+//         Item.findByIdAndRemove(checkedItems, function(err){
+//             if(!err){
+//                 console.log("successfully deleted");
+//                 res.redirect("/");
+//             }
+//         });
+//     }else{
+
+//     }   
+// });
 
 
 app.listen(3000, function(){
