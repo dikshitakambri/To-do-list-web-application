@@ -6,7 +6,22 @@
         <title>To-do List</title>
     </head>
     <body>
-        <h1>It's a <%= Day %></h1>
+        <div class="box" id="heading">
+            <h1>It's a <%= kindOfDay %></h1>
+        </div>
+        <div class="box">
+            <% for(var i=0; i<=newListItems.length ;i++){ %>
+                <div class="item">
+                    <input type="checkbox">
+                    <p><%= newListItems[i] %></p>
+                </div>
+            <% } %>
+            <form method="POST" action="/" class="item">
+                <input type="text" name="NewItem" placeholder="New Item" autocomplete="off">
+                <button type="submit">+</button>
+            </form>
+        </div>
+        
     </body>
 </html>
 

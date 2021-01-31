@@ -3,9 +3,11 @@ const bodyParser = require("body-parser");
 // const mongoose = require("mongoose");
 
 const app = express();
-// app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.urlencoded({extended:true}));
 app.set('view engine', 'ejs');
-// app.use(express.static("public"));
+
+var items = ["1","2","3"];
+app.use(express.static("public"));
 
 // mongoose.connect("mongodb://localhost:27017/todolistDB" ,{ useNewUrlParser: true , useUnifiedTopology: true});
 
@@ -43,7 +45,7 @@ app.get("/", function(req, res){
 
     var day = today.toLocaleDateString("en-US", options);
 
-    res.render("list", {Day : day});
+    res.render("list", {kindOfDay : day, newListItems : items});
 });
 
 //     Item.find({}, function(err, foundItems){
@@ -65,7 +67,11 @@ app.get("/", function(req, res){
 //         }
 //     });
 // });
-
+ app.post("/", function(req, res){
+    var item = req.body.NewItem;
+    items.push(item);
+    res.redirect("/");
+ });
 // app.get("/:CustomListName", function(req, res){
 
 //     const CustomListName = req.params.CustomListName;
