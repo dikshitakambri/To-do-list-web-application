@@ -9,6 +9,7 @@ app.set('view engine', 'ejs');
 app.use(express.static("public"));
 
 mongoose.connect("mongodb://localhost:27017/todolistDB" ,{ useNewUrlParser: true , useUnifiedTopology: true});
+mongoose.set('useFindAndModify', false);
 
 var today = new Date();
     var currentday = today.getDay();
@@ -95,83 +96,45 @@ app.get("/:customListName", function(req, res){
 
  app.post("/", function(req, res){
     var itemName = req.body.newItem;
+    const listName = req.body.list;
 
     const item = new Item ({
         name : itemName
     });
 
-    item.save();
-    res.redirect("/");
+    if(listName === day){
+        item.save();
+        res.redirect("/");
+    }else{
+        List.findOne({name : listName}, function(err, foundList) {
+            foundList.items.push(item);
+            foundList.save();
+            res.redirect("/" + listName);
+        });
+    }
  });
 
  app.post("/delete", function(req, res) {
 
     const checkedItemId = req.body.checkbox;
+    const listName = req.body.listName;
 
-    Item.findByIdAndRemove(checkedItemId, function(err) {
-        if(!err){
-            console.log("Successfully deleted");
-            res.redirect("/");
-        }
-    });
+    if(listName === day){
+        Item.findByIdAndRemove(checkedItemId, function(err) {
+            if(!err){
+                console.log("Successfully deleted");
+                res.redirect("/");
+            }
+        });
+    }else{
+        List.findOneAndUpdate({name : listName}, {$pull: {items: {_id : checkedItemId}}}, function(err, foundList) {
+            if(!err){
+                res.redirect("/" + listName);
+            }
+        });
+    }
+    
  });
-
-// app.post("/", function(req, res){
-
-//     var itemName = req.body.item;
-//     var listName = req.body.list;
-
-//     var today = new Date();
-//     var currentday = today.getDay();
-//     var options = {
-//         month:"long",
-//         year : "numeric",
-//         weekday :"long"
-//     };
-
-//     var day = today.toLocaleDateString("en-US", options);
-
-//     const Newitem = new Item ({
-//         name : itemName
-//     });
-//     if(listName === day){
-//         Newitem.save();
-//         res.redirect("/");
-//     }else{
-//         List.findOne({name : listName}, function(err, foundList){
-//             foundList.item.push(Newitem);
-//             foundList.save();
-//             res.redirect("/" + listName);
-//         });
-//     }
-// });
-
-// app.post("/delete", function(req, res){
-//     const checkedItems = req.body.checkbox;
-//     const listName = req.body.ListName;
-
-//     var today = new Date();
-//     var currentday = today.getDay();
-//     var options = {
-//         month:"long",
-//         year : "numeric",
-//         weekday :"long"
-//     };
-
-//     var day = today.toLocaleDateString("en-US", options);
-
-//     if(listName === day){
-//         Item.findByIdAndRemove(checkedItems, function(err){
-//             if(!err){
-//                 console.log("successfully deleted");
-//                 res.redirect("/");
-//             }
-//         });
-//     }else{
-
-//     }   
-// });
-
 
 app.listen(3000, function(){
     console.log("Server running on 3000 port");
