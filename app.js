@@ -37,13 +37,6 @@ const item2 = new Item ({
 
 const defaultItems = [item1 , item2];
 
-Item.insertMany(defaultItems, function(err){
-    if(err){
-        console.log(err);
-    }else{
-        console.log("Successfully aaded");
-    }
-});
 // const listSchema = {
 //     name : String,
 //     item : [itemSchema]
@@ -53,28 +46,28 @@ Item.insertMany(defaultItems, function(err){
 
 app.get("/", function(req, res){
 
-    res.render("list", {ListTitle : day, newListItems : defaultItems});
+    Item.find({}, function(err, foundItems){
+
+        if(foundItems.length === 0){
+            Item.insertMany(defaultItems, function(err){
+                if(err){
+                    console.log(err);
+                }else{
+                    console.log("Successfully aaded");
+                }
+            });
+            res.redirect("/");
+        }else{
+            res.render("list", {
+                ListTitle : day,
+                newListItems : foundItems
+            });
+        }
+        
+    });
+    
 });
 
-//     Item.find({}, function(err, foundItems){
-
-//         if(foundItems.length === 0){
-//             Item.insertMany(defaultList, function(err){
-//                 if(err){
-//                     console.log(err);
-//                 }else{
-//                     console.log("Successfully aaded");
-//                 }
-//             });
-//             res.redirect("/");
-//         }else{
-//             res.render("list",{
-//                 ListTitle : day,
-//                 newItems : foundItems
-//             });
-//         }
-//     });
-// });
  app.post("/", function(req, res){
     var item = req.body.NewItem;
     items.push(item);
