@@ -37,12 +37,12 @@ const item2 = new Item ({
 
 const defaultItems = [item1 , item2];
 
-// const listSchema = {
-//     name : String,
-//     item : [itemSchema]
-// };
+const listSchema = {
+    name : String,
+    items : [itemsSchema]
+};
 
-// const List = mongoose.model("List", listSchema);
+const List = mongoose.model("List", listSchema);
 
 app.get("/", function(req, res){
 
@@ -68,35 +68,53 @@ app.get("/", function(req, res){
     
 });
 
+app.get("/:customListName", function(req, res){
+
+    const customListName = req.params.customListName;
+
+    List.findOne({name: customListName}, function(err, foundList){
+        if(!err){
+            if(!foundList){
+                const list = new List({
+                    name : customListName,
+                    items : defaultItems
+                });
+                list.save();
+                res.redirect("/" + customListName);
+
+            }else {
+                res.render("list",{
+                    ListTitle : foundList.name,
+                    newListItems : foundList.items
+                });
+            }
+        }
+    });
+
+});
+
  app.post("/", function(req, res){
-    var item = req.body.NewItem;
-    items.push(item);
+    var itemName = req.body.newItem;
+
+    const item = new Item ({
+        name : itemName
+    });
+
+    item.save();
     res.redirect("/");
  });
-// app.get("/:CustomListName", function(req, res){
 
-//     const CustomListName = req.params.CustomListName;
+ app.post("/delete", function(req, res) {
 
-//     List.findOne({name: CustomListName}, function(err, foundList){
-//         if(!err){
-//             if(!foundList){
-//                 const list = new List({
-//                     name : CustomListName,
-//                     item : defaultList
-//                 });
-//                 res.redirect("/" + CustomListName);
-//                 list.save();
+    const checkedItemId = req.body.checkbox;
 
-//             }else {
-//                 res.render("list",{
-//                     ListTitle : foundList.name,
-//                     newItems : foundList.item
-//                 });
-//             }
-//         }
-//     });
-
-// });
+    Item.findByIdAndRemove(checkedItemId, function(err) {
+        if(!err){
+            console.log("Successfully deleted");
+            res.redirect("/");
+        }
+    });
+ });
 
 // app.post("/", function(req, res){
 
