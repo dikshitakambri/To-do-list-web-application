@@ -69,6 +69,27 @@ app.get("/", function(req, res){
     
 });
 
+app.post("/", function(req, res){
+    var itemName = req.body.newItem;
+    const listName = req.body.list;
+
+    const item = new Item ({
+        name : itemName
+    });
+
+    if(listName === day){
+        item.save();
+        res.redirect("/");
+    }else{
+        List.findOne({name : listName}, function(err, foundList) {
+            foundList.items.push(item);
+            foundList.save();
+            res.redirect("/" + listName);
+        });
+    }
+ });
+
+
 app.get("/:customListName", function(req, res){
 
     const customListName = _.capitalize(req.params.customListName);
@@ -94,26 +115,7 @@ app.get("/:customListName", function(req, res){
 
 });
 
- app.post("/", function(req, res){
-    var itemName = req.body.newItem;
-    const listName = req.body.list;
-
-    const item = new Item ({
-        name : itemName
-    });
-
-    if(listName === day){
-        item.save();
-        res.redirect("/");
-    }else{
-        List.findOne({name : listName}, function(err, foundList) {
-            foundList.items.push(item);
-            foundList.save();
-            res.redirect("/" + listName);
-        });
-    }
- });
-
+ 
  app.post("/delete", function(req, res) {
 
     const checkedItemId = req.body.checkbox;

@@ -31,3 +31,7 @@
     <p>Home-route<img src="public/Images/home-route.JPG" alt="home-route" width="50%"></p>
     <p>work-route<img src="public/Images/work-route.JPG" alt="work-route" width="50%"></p>
 </span>
+
+<br>
+
+[![Github All Releases](https://img.shields.io/github/downloads/dikshitakambri/To-do-list-web-application/total.svg)]()
